@@ -17,7 +17,7 @@ expressObj.use(
     })
 )
 expressObj.get('/api/users', async function (req, res) {
-    res.send(await userDb.find())
+    res.send(await userdb.find())
   })
 
 
@@ -26,7 +26,7 @@ expressObj.listen(port, async function () {
   console.log(`Listening on port: `, port)
   // mongodb://localhost:27017
   console.log('connecting ...')
-  await mongoose.connect('mongodb+srv://tour:tour123456@cluster0.smhvlzt.mongodb.net/test', {
+  await mongoose.connect('mongodb+srv://tour:tour123456@tourdb.ycba4cx.mongodb.net/tour_db', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -35,7 +35,9 @@ expressObj.listen(port, async function () {
       name: { type: String },
       lname: { type: String },
       email: { type: String },
-      tol: { type: String }
+      phone: { type: String },
+      username:{type:String},
+      password:{ type:String}
     },
     {
         versionKey: false, // You should be aware of the outcome after set to false
@@ -43,5 +45,5 @@ expressObj.listen(port, async function () {
     )
 
   console.log('connection success')
-  userdb = mongoose.model('users', new mongoose.Schema(userSchema), 'users')
+  userdb = mongoose.model('user', new mongoose.Schema(userSchema), 'user') //userตามชื่อ collection ใน db
 })
