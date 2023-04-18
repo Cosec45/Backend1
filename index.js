@@ -8,7 +8,7 @@ let tourForeign = null
 let daydb = null
 let contactdb =null
 let tripbookdb = null
-let 
+
 
 const cors = require('cors')
 
