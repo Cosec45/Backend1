@@ -8,7 +8,7 @@ let tourForeign = null
 let daydb = null
 let contactdb =null
 let tripbookdb = null
-
+let paymentdb = null
 
 const cors = require('cors')
 
@@ -81,6 +81,30 @@ expressObj.post('/api/contact', async function (req, res) {
   // res.send(req.body)
   res.send({"data":"บันทึกข้อมูล"}) //api ต้องจบที่อันนี้ไม่งั้นแตก
 })
+
+expressObj.get('/api/payment', async function (req, res) {
+  res.send(await paymentdb.find())
+})
+
+expressObj.post('/api/payment', async function (req, res) {
+  
+  const obj = Object.assign({},req.body)
+  console.log(obj)
+  const payment = {
+    cardnum: obj.body.cardnum,
+    numoncard: obj.body.numoncard,
+    exdate: obj.body.exdate,
+    cvv: obj.body.cvv,
+  }
+  paymentdb.create(payment).then((result) => {
+    console.log(payment)
+    console.log(result)
+  
+  })
+  // res.send(req.body)
+  res.send({"data":"บันทึกข้อมูล"}) //api ต้องจบที่อันนี้ไม่งั้นแตก
+})
+
 expressObj.get('/api/tripbook', async function (req, res) {
   res.send(await tripbookdb.find())
 })
@@ -124,6 +148,12 @@ expressObj.listen(port, async function () {
       useUnifiedTopology: true,
     }
   )
+  const paymentSchema = mongoose.Schema({
+    cardnum: { type: String },
+    numoncard: { type: String },
+    exdate: { type: String },
+    cvv: { type: String }
+  })
   const tripbookSchema = mongoose.Schema({
     name: { type: String },
     lname: { type: String },
@@ -152,17 +182,7 @@ expressObj.listen(port, async function () {
     id: { type: Number },
     place: { type: String },
     tourId: { type: String },
-    day1: { type: String },
-    day2: { type: String },
-    day3: { type: String },
-    day4: { type: String },
-    day5: { type: String },
-    day6: { type: String },
-    day7: { type: String },
-    day8: { type: String },
-    day9: { type: String },
-    day10: { type: String },
-    day11: { type: String }
+    day:[ { type: String }]
   })
   const tourDchema = mongoose.Schema({
     id: { type: Number },
@@ -210,6 +230,7 @@ expressObj.listen(port, async function () {
   console.log('connection success')
   userdb = mongoose.model('user', new mongoose.Schema(userSchema), 'user') //userตามชื่อ collection ใน db
   daydb = mongoose.model('day', new mongoose.Schema(tripSchema), 'day')
+  paymentdb = mongoose.model('payment', new mongoose.Schema(paymentSchema), 'payment')
   tripbookdb = mongoose.model('book', new mongoose.Schema(tripbookSchema), 'book')
   contactdb = mongoose.model(
     'contact',
